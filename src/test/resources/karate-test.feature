@@ -66,6 +66,10 @@ Feature: Test de API súper simple
     When method POST
     Then status 400
     * print response
+    * match response.name == 'Name is required'
+    * match response.description == 'Description is required'
+    * match response.powers == 'Powers are required'
+    * match response.alterego == 'Alterego is required'
 
   @id:7 @ActualizarPersonajeExitosV1 @CasoExitoso
   Scenario: T-API-TPM-61000 Actualizar un personaje  Exitoso
