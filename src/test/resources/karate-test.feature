@@ -47,7 +47,8 @@ Feature: Test de API súper simple
     When method GET
     Then status 404
     * print response
-
+    * def responseMsg = response.error
+    * match responseMsg == 'Character not found'
 
   @id:5 @CrearPersonajeYaExisteV1 @CasoFallido
   Scenario: T-API-TPM-61000 Crear un personaje Ya Existe
@@ -57,6 +58,9 @@ Feature: Test de API súper simple
     When method POST
     Then status 400
     * print response
+    * def responseMsg = response.error
+    * match responseMsg == 'Character name already exists'
+
 
   @id:6 @CrearPersonajeInvalidosCaractereV1 @CasoFallido
   Scenario: T-API-TPM-61000 Crear un personaje con caracteres inválidos
@@ -91,6 +95,8 @@ Feature: Test de API súper simple
     When method PUT
     Then status 404
     * print response
+    * def responseMsg = response.error
+    * match responseMsg == 'Character not found'
 
   @id:9 @EliminarPersonajeExitosoV1 @CasoExitoso
   Scenario: T-API-TPM-61000 Eliminar un personaje  Exitoso
@@ -104,3 +110,5 @@ Feature: Test de API súper simple
     * path '/testuser/api/characters/' +'999'
     When method DELETE
     Then status 404
+    * def responseMsg = response.error
+    * match responseMsg == 'Character not found'
