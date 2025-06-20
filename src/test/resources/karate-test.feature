@@ -16,6 +16,7 @@ Feature: Test de API súper simple
     * print response
     And def characterId = response.id
     And print 'Character IDs: ' + characterId
+    And  match response.name == randomName
 
   @id:2 @ListarCaracteresV1
   Scenario: Listar todos los personajes
@@ -27,7 +28,8 @@ Feature: Test de API súper simple
     And match each response.[*].id == '#? _ > 0'
     And def characterId = response[0].id
     And print 'Character IDs: ' + characterId
-
+  And  match response[0].name != null
+  And  match response[0] contains { id: '#number', name: '#string' }
 
 
   @id:3 @ListarCaracterresPorIdV1
@@ -46,8 +48,6 @@ Feature: Test de API súper simple
     * print response
 
 
-
-
   @id:5 @CrearPersonajeYaExisteV1
   Scenario: Crear un personaje Ya Existe
     * path '/testuser/api/characters'
@@ -56,6 +56,7 @@ Feature: Test de API súper simple
     When method POST
     Then status 400
     * print response
+
   @id:6 @CrearPersonajeInvalidosCaractereV1
   Scenario: Crear un personaje con caracteres inválidos
     * path '/testuser/api/characters'
@@ -64,6 +65,7 @@ Feature: Test de API súper simple
     When method POST
     Then status 400
     * print response
+
   @id:7 @ActualizarPersonajeExitosV1
   Scenario: Actualizar un personaje  Exitoso
     * call read("@CrearPersonajeV1")
@@ -73,6 +75,9 @@ Feature: Test de API súper simple
     When method PUT
     Then status 200
     * print response
+  And  match response.id == characterId
+  And  match response.name == datarequest.name
+
   @id:8 @ActualizarPersonajeNoExiteV1
   Scenario: Actualizar un personaje  Inexistente
     * path '/testuser/api/characters/' +'9999'
@@ -81,9 +86,10 @@ Feature: Test de API súper simple
     When method PUT
     Then status 404
     * print response
-    @id:9 @EliminarPersonajeExitosoV1
-    Scenario: Eliminar un personaje  Exitoso
-      * call read("@CrearPersonajeV1")
+
+  @id:9 @EliminarPersonajeExitosoV1
+  Scenario: Eliminar un personaje  Exitoso
+    * call read("@CrearPersonajeV1")
     * path '/testuser/api/characters/' + characterId
     When method DELETE
     Then status 204
